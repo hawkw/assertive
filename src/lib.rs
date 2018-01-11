@@ -1,10 +1,9 @@
-#[cfg(feature="pretty")]
-
+#[cfg(feature = "pretty")]
 extern crate console;
 
-use std::fmt;
-use std::error::Error;
 use std::default::Default;
+use std::error::Error;
+use std::fmt;
 
 pub struct Test {
     name: String,
@@ -21,7 +20,7 @@ pub struct Asserting<'a> {
 #[derive(Debug)]
 pub struct Location {
     file: &'static str,
-    line: u32
+    line: u32,
 }
 
 pub struct Assertion {
@@ -34,7 +33,7 @@ pub struct Assertion {
 enum AssertionValue {
     Passed,
     Failed,
-    Errored (Box<Error>),
+    Errored(Box<Error>),
 }
 #[cfg(feature = "pretty")]
 trait Styler {
@@ -66,7 +65,8 @@ impl<'a> Asserting<'a> {
     }
 
     pub fn with_clue<T>(mut self, clue: &T, name: &str) -> Self
-    where T: fmt::Debug
+    where
+        T: fmt::Debug,
     {
         self.clues.push(format!("{} = {:?}", name, clue));
         self
@@ -98,7 +98,8 @@ impl<'a> Asserting<'a> {
 
 impl Assertion {
     pub fn with_clue<T>(&mut self, clue: &T, name: &str) -> &mut Self
-    where T: fmt::Debug
+    where
+        T: fmt::Debug,
     {
         self.clues.push(format!("{} = {:?}", name, clue));
         self
@@ -122,7 +123,9 @@ impl Styler for Assertion {
 impl fmt::Display for Assertion {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let style = self.style();
-        write!(f, "{check} {name}\n",
+        write!(
+            f,
+            "{check} {name}\n",
             check = self.check(),
             name = style.apply_to(&self.name)
         )?;
@@ -177,6 +180,5 @@ mod tests {
         let two = 2;
         println!("{}", assert_equal!(one, two));
         println!("{}", assert_equal!(one, 1));
-
     }
 }
